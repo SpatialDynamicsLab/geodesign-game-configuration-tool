@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css">
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <!-- Include the map.js file -->
-    <script src="{{ url_for('static', filename='js/map.js') }}"></script>
+{#    <script src="{{ url_for('static', filename='js/map.js') }}"></script>#}
     
     <style>
         /* Body and general styles */
@@ -147,7 +147,10 @@ footer {
 <body>
     <header>
         <h1>Geodesign Game Config Generator</h1>
-        <a href="https://score-eu-project.eu"><img src="https://score-eu-project.eu/wp-content/uploads/2021/09/SCORE-LOGO-web.png" alt="SCORE project Logo" class="logo"></a>
+        <a href="https://score-eu-project.eu">
+            <img src="https://score-eu-project.eu/wp-content/uploads/2021/09/SCORE-LOGO-web.png"
+                 alt="SCORE project Logo" class="logo">
+        </a>
         <nav>
             <ul>
                 <li><a href="#city-page">City Configuration</a></li>
@@ -188,22 +191,32 @@ footer {
     </section>
 
     <section id="ebas-page">
-        <h2>EBAs List</h2>
-        <form id="ebas-form">
-            <!-- EBA selection form elements -->
-            <label for="selected-ebas">Choose the EBAs you want to add to the config:</label><br>
-            {% for eba_name in eba_names %}
-                <input type="checkbox" name="selected-ebas" value="{{ eba_name }}"> {{ eba_name }}<br>
-            {% endfor %}
-        </form>
+    <h2>EBAs List</h2>
+    <form id="ebas-form" method="post" action="/your_post_route">
+        <!-- EBA selection form elements -->
+        <label for="selected-ebas">
+            Choose the EBAs you want to add to the config:
+        </label><br>
+        {% for eba in ebas %}
+            <input type="checkbox" name="selected-ebas" value="{{ eba.id }}">
+            {{ eba.name }}<br>
+        {% endfor %}
+        <input type="submit" value="Submit">
+    </form>
     </section>
 
+
     <div style="text-align: center;">
-        <button id="download-config-button" class="download-button" onclick="downloadConfig()">Download Actual Config</button>
+        <button id="download-config-button" class="download-button"
+                onclick="downloadConfig()">Download Actual Config
+        </button>
     </div>
 
     <footer>
-        <a href="https://score-eu-project.eu"><img src="https://score-eu-project.eu/wp-content/uploads/2021/09/SCORE-LOGO-web.png" alt="SCORE project Logo" class="logo"></a>
+        <a href="https://score-eu-project.eu">
+            <img src="https://score-eu-project.eu/wp-content/uploads/2021/09/SCORE-LOGO-web.png"
+                 alt="SCORE project Logo" class="logo">
+        </a>
     </footer>
 
     <script>
@@ -211,15 +224,22 @@ footer {
         const map = L.map('map').setView([51.5074, -0.1278], 10);
 
         // Replace 'your_mapbox_access_token' with your Mapbox access token
-        L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=your_mapbox_access_token', {
+        {#L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=your_mapbox_access_token', {
             attribution: '&copy; <a href="https://www.mapbox.com/">Mapbox</a>',
             id: 'mapbox/streets-v11',
+            tileSize: 512,
+            zoomOffset: -1
+        }).addTo(map);#}
+
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; CARTO',
             tileSize: 512,
             zoomOffset: -1
         }).addTo(map);
 
         // Event listener for form submission
-        document.getElementById('config-form').addEventListener('submit', function (event) {
+        document.getElementById('config-form').addEventListener(
+            'submit', function (event) {
             event.preventDefault();
             // Get map center and bounds
             const mapCenter = map.getCenter();
@@ -240,9 +260,8 @@ footer {
             // Submit the form
             this.submit();
         });
-
         // Function to handle the "Download Actual Config" button
-    function downloadConfig() {
+        function downloadConfig() {
         // Prepare the data you want to send (if needed)
         // For example, you can include data from form inputs
 

@@ -13,7 +13,15 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    conn = sqlite3.connect(database_path)
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+    ebas_query = "SELECT * FROM ebas"
+    cursor.execute(ebas_query)
+    ebas_records = cursor.fetchall()
+    ebas = [{'id': eba['id'], 'name': eba['name']} for eba in ebas_records]
+    conn.close()
+    return render_template('index.html', ebas=ebas)
 
 
 @app.route('/generate_config', methods=['POST'])
