@@ -4,6 +4,10 @@ import zipfile
 from io import BytesIO
 import sqlite3
 
+from pathlib import Path
+BASE_DIR = Path(__file__).resolve().parent.parent
+database_path = BASE_DIR / 'database' / 'config_generator.db'
+
 app = Flask(__name__)
 
 
@@ -26,7 +30,7 @@ def generate_config():
 
         # Connect to your SQLite database
         # Update this with your actual database path
-        conn = sqlite3.connect('your_database_path_here.db')
+        conn = sqlite3.connect(database_path)
         c = conn.cursor()
         
         eba_data = []
