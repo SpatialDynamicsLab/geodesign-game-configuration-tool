@@ -185,32 +185,23 @@ footer {
             <div id="map">
                 <h2>Game Map</h2>
             </div> <!-- Map container -->
-
+            <br>
+                    
+            <h2>EBAs List</h2>
+            
+            <!-- EBA selection form elements -->
+            <label for="selected-ebas">
+                Choose the EBAs you want to add to the config:
+            </label><br>
+            {% for eba in ebas %}
+                <input type="checkbox" name="selected-ebas" value="{{ eba.id }}">
+                {{ eba.name }}<br>
+            {% endfor %}
+            <br>
             <input type="submit" value="Generate Configuration">
         </form>
     </section>
 
-    <section id="ebas-page">
-    <h2>EBAs List</h2>
-    <form id="ebas-form" method="post" action="/your_post_route">
-        <!-- EBA selection form elements -->
-        <label for="selected-ebas">
-            Choose the EBAs you want to add to the config:
-        </label><br>
-        {% for eba in ebas %}
-            <input type="checkbox" name="selected-ebas" value="{{ eba.id }}">
-            {{ eba.name }}<br>
-        {% endfor %}
-        <input type="submit" value="Submit">
-    </form>
-    </section>
-
-
-    <div style="text-align: center;">
-        <button id="download-config-button" class="download-button"
-                onclick="downloadConfig()">Download Actual Config
-        </button>
-    </div>
 
     <footer>
         <a href="https://score-eu-project.eu">
