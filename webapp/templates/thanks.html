@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Geodesign Game Config Generator</title>
+    <!-- Include Leaflet CSS and JS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css">
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <!-- Include the map.js file -->
+    {#
+    <script src="{{ url_for('static', filename='js/map.js') }}"></script>#}
+
+    <style>
+        /* Body and general styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        /* Header styles */
+        header {
+            background-color: #333;
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 36px;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        nav ul li {
+            margin-right: 20px;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+
+        nav ul li a:hover {
+            color: #007bff;
+            /* Blue color on hover */
+        }
+
+        /* Section styles */
+        section {
+            margin: 20px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        section h2 {
+            margin-top: 0;
+            font-size: 24px;
+        }
+
+        /* Form styles */
+        form {
+            margin-top: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        input[type="checkbox"] {
+            margin-right: 5px;
+        }
+
+        input[type="submit"] {
+            padding: 10px 20px;
+            background-color: #333;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* Map container styles */
+        #map {
+            margin-top: 20px;
+            height: 600px
+        }
+
+        /* Logo styles */
+        .logo {
+            display: block;
+            margin: 0 auto;
+            max-width: 200px;
+            margin-bottom: 20px;
+        }
+
+        /* Footer styles */
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #333;
+            color: white;
+        }
+
+        /* Button styles */
+        .download-button {
+            padding: 15px 30px;
+            background-color: #333;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: Arial, sans-serif;
+            /* Use the same font as the logo */
+            font-size: 18px;
+            /* Adjust the font size as needed */
+            transition: background-color 0.3s, color 0.3s;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        .download-button:hover {
+            background-color: #007bff;
+            /* Blue color on hover */
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Geodesign Game Config Generator</h1>
+        <a href="https://score-eu-project.eu">
+            <img src="https://score-eu-project.eu/wp-content/uploads/2021/09/SCORE-LOGO-web.png"
+                alt="SCORE project Logo" class="logo">
+        </a>
+        <nav>
+            <ul>
+                <li><a href="#city-page">City Configuration</a></li>
+                <li><a href="#ebas-page">EBAs List</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section id="city-page">
+        <h2>Thanks!</h2>
+        <p>You can upload on a public server e.g. Github or Digital Ocean and point the Geodesign game to read this configuration. </p>
+        <h4>Download Data</h4>
+        <button onclick="downloadObjectAsJson('locals')">Download Locals file</button>
+        <h4>Globals Data</h4>
+        <button onclick="downloadObjectAsJson('globals')">Download Globals file</button>
+        <h4>EBAs</h4>
+        <button onclick="downloadObjectAsJson('ebas')">Download EBAs file</button>
+
+    </section>
+
+
+    <footer>
+        <a href="https://score-eu-project.eu">
+            <img src="https://score-eu-project.eu/wp-content/uploads/2021/09/SCORE-LOGO-web.png"
+                alt="SCORE project Logo" class="logo">
+        </a>
+    </footer>
+
+</body>
+<script type="text/javascript">
+    const local_data = {{ local_data|safe}};
+    const globals_data = {{ globals_data|safe}};
+    const eba_data = {{ eba_data|safe}};
+    // var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(storageObj));
+    // var dlAnchorElem = document.getElementById('downloadAnchorElem');
+    // dlAnchorElem.setAttribute("href",     local_data     );
+    // dlAnchorElem.setAttribute("download", "local.json");
+    // dlAnchorElem.click();
+    function downloadObjectAsJson(exportName) {
+        const data_lookup = {'locals':local_data, 'globals':globals_data, 'ebas':eba_data};
+        const config_data = data_lookup[exportName];
+        var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(config_data));
+        var downloadAnchorNode = document.createElement('a');
+        downloadAnchorNode.setAttribute("href", dataStr);
+        downloadAnchorNode.setAttribute("download", exportName + ".json");
+        document.body.appendChild(downloadAnchorNode); // required for firefox
+        downloadAnchorNode.click();
+        downloadAnchorNode.remove();
+    }
+</script>
+
+</html>
