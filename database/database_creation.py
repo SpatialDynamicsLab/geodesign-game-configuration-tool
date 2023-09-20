@@ -67,32 +67,10 @@ def insert_initial_ebas():
     conn.close()
 
 
-@app.route('/generate_config', methods=['POST'])
-def generate_config():
-    # Retrieve form data
-    city_name = request.form['city-name']
-    city_description = request.form['city-description']
-    selected_ebas = request.form.getlist('selected-ebas')
-    mean_cost = int(request.form['mean-cost'])
-    currency = request.form['currency']
-    map_center = request.form['map-center']
-    city_budget = int(request.form['city-budget'])
 
-    # Convert the list of selected ebas to a string for storage in the database
-    ebas_str = ','.join(selected_ebas)
-
-    # Insert data into the database
-    conn = sqlite3.connect('config_generator.db')
-    c = conn.cursor()
-    c.execute('''INSERT INTO cities (name, description, ebas, mean_cost, currency, location, budget)
-                 VALUES (?, ?, ?, ?, ?, ?, ?)''',
-              (city_name, city_description, ebas_str, mean_cost, currency, map_center, city_budget))
-    conn.commit()
-    conn.close()
-
-    # Return a response or redirect to another page
-    return 'Config generated successfully!'
-
+@app.route("/")
+def hello_world():
+    return "<p>Database Created</p>"
 
 if __name__ == '__main__':
     create_db()  # Create the database and tables when the app starts
